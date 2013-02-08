@@ -1,0 +1,532 @@
+	<link rel="stylesheet" type="text/css" href="<% request.uri_base %>/css/model_builder.css" />
+	<link media="screen" type="text/css" href="<% request.uri_base %>/javascripts/fancybox-1.3.4/jquery.fancybox-1.3.4.css" rel="stylesheet">
+	<link media="all" href="http://code.jquery.com/ui/1.10.0/themes/base/jquery-ui.css" rel="stylesheet">
+   <script type="text/javascript">
+	$(function(){
+		$('#open_extras').toggle(function() {
+		      $('#extra_stuff').css('display','block');
+		      $('.arrows').replaceWith('<span class="arrows">&#9660;</span> ')
+		   }, function() {
+		      $('#extra_stuff').css('display','none');
+		      $('.arrows').replaceWith('<span class="arrows">&#9654;</span> ')
+		   });
+		$('#readable_name').blur(function(){
+		   var regex = / /g;
+		   var name = $('#readable_name').val().replace(regex,'_');
+		   $('#table_name').val(name.toLowerCase());
+		});
+
+	});
+   </script>
+   <style>
+      .field_divider[hil="highlighted"] {
+         background-color: #aaa;
+      }
+	  .ui-helper-hidden-accessible {
+		   clip: auto;
+		}
+		#extra_stuff {
+		   display: none;
+		}
+		p.special_links {
+		   font-size: 11px;
+		   margin: 10px 0 5px 0;
+		}
+      .listable_item_buttons {
+         display: none;
+      }
+      .listable-controls {
+         position: absolute;
+         display: none;
+         padding: 10px;
+         background-color: #F0EAE1;
+         -moz-border-radius: 3px 3px 3px 3px;
+         border-radius: 3px;
+         -moz-box-shadow: 0 1px 2px #666666;
+         box-shadow: 0 1px 2px #666;
+      }
+      .listable-controls a {
+         float: left;
+         clear: both;
+         width: 156px;
+      }
+      #listable-form-vault {
+         min-height: 380px;
+         width: 350px;
+      }
+      #listable-form-vault form {
+         padding: 35px 0 0 50px; 
+      }
+   </style>
+<div id="msgs">
+<input type="button" onclick="location='/xm_instance/form_builder.cgi'" value="Return to list" />
+</div>
+<div class="controls">
+   <a id="add_textfield" class="button" href="#">Add Text Field</a>
+   <a id="add_textarea" class="button" href="#">Add Textarea</a>
+   <a id="add_checkbox" class="button" href="#">Add Checkbox</a>
+   <a id="add_radio" class="button" href="#">Add Radio Button</a>
+   <a id="add_select" class="button" href="#">Add Drop Down</a>
+   <a id="add_email" class="button" href="#">Add Email Field</a>
+   <a id="add_file" class="button" href="#">Add File Field</a>
+   <a id="add_captcha" class="button" href="#">Add a Captcha</a>
+   <a id="add_tinymce" class="button" href="#">Add Tiny MCE</a>
+   <a id="add_datepicker" class="button" href="#">Add Date Picker</a>
+   <a id="add_lineoftext" class="button" href="#">Add Line of Text</a>
+   <a id="add_session_variable" class="button" href="#">Add Session Variable</a>
+   <a id="controls_close" href="#"></a>
+</div>
+<!-- Begin Form -->
+<form method="post" id="model_form">
+   <input type="hidden" name="id" value="<% model.id %>" />
+   <p class="wrap">
+      <label for="app_folder" class="blabel">App folder</label>
+      <input type="text" name="app_folder" id="app_folder" />
+   </p>
+   <p class="wrap">
+      <label for="readable_name" class="blabel">Readable Name</label>
+      <input type="text" name="readable_name" id="readable_name" maxlength="32" />
+   </p>
+   <p class="wrap">
+      <label for="table_name" class="blabel">Table name</label>
+      <input type="text" name="table_name" id="table_name" maxlength="32" />
+   </p>
+   <p class="special_links"><a href="#" id="open_extras">Extras <span class="arrows">&#9654;</span></a></p>
+   <div id="extra_stuff">
+      <p class="wrap">
+         <input type="checkbox" name="overlay_cb" id="overlay_cb" /><label for="overlay_cb" class="blabel nextto" >Include 'Processing' Overlay</label>
+         
+      </p>
+   </div>
+   <!-- TODO
+   <p class="wrap">
+      
+      <input type="checkbox" name="no_email" id="no_email" /><label for="no_email" class="blabel nextto" >No email notifications</label> 
+   </p>
+   <p class="wrap">
+      
+      <input type="checkbox" name="no_export" id="no_export" /><label for="no_export" class="blabel nextto" >No export needed</label> 
+   </p>
+   -->
+   <p class="wrap">
+      
+      <input type="checkbox" name="write_file" id="write_file" checked="checked" /><label for="write_file" class="blabel nextto" >Write file</label>
+   </p>
+   <hr/>
+   <p>
+      <input type="submit" class="button" value="Save Form" />
+      <% IF model.id %>
+         <input type="button" class="button" value="Delete this Model">
+      <% END %>
+      <a href="/models/add">Make another model</a>
+   </p>
+   <!-- Exisitng variables -->
+   <div id="variable_vault">
+   <% IF model.attributes %>
+      <% FOR attribute IN model.attributes %>
+      <!--
+         <input type="hidden" name="field_label[]" value="<tmpl_var label>" class="field_<tmpl_var counter>" >
+         <input type="hidden" name="field_type[]" value="<tmpl_var type>" class="field_<tmpl_var counter>" >
+         <input type="hidden" name="field_order[]" value="<tmpl_var counter>" class="field_<tmpl_var counter>" >
+         <input type="hidden" name="field_length[]" value="<tmpl_var length>" class="field_<tmpl_var counter>" >
+         <input type="hidden" name="field_mandatory[]" value="<tmpl_var mandatory>" class="field_<tmpl_var counter>" >
+         <input type="hidden" name="field_validation[]" value="<tmpl_var validation>" class="field_<tmpl_var counter>" >
+         <input type="hidden" name="field_options[]" value="<tmpl_var options>" class="field_<tmpl_var counter>" >
+         <input type="hidden" name="field_id[]" value="<tmpl_var id>" class="field_<tmpl_var counter>" >
+      -->
+      <% END %>
+   <% END %>
+   </div>
+</form> 
+<!-- Listable -->
+<ul class="attributes listable">
+</ul>
+<!-- Sidebar explaining keyboard shortcuts -->
+<div class="form_explanation">
+   <p>
+      e - delete field above cursor
+   </p>
+   <p>
+      k - move cursor up
+   </p>
+   <p>
+      j - move cursor down
+   </p>
+   <p>
+      a - add text field
+   </p>
+   <p>
+      s - add text area
+   </p>
+   <p>
+      d - add checkbox
+   </p>
+   <p>
+      f - add radio buttons
+   </p>
+   <p>
+      g - add drop down
+   </p>
+   <p>
+      z - add email field
+   </p>
+   <p>
+      x - add Tiny MCE
+   </p>
+   <p>
+      c - add Captcha
+   </p>
+   <p>
+      v - add File field
+   </p>
+   <p>
+      b - add Date Picker
+   </p>
+   <p>
+      w - add Session Variable
+   </p>
+</div>
+<!-- Form vault for listable elements -->
+<div id="listable-form-vault">
+   <form id="textfield_form" method="post" onsubmit="return false;">
+      <input type="hidden" name="rm" value="v_tx">
+      <input type="hidden" name="tx_options" id="tx_options" value=""/>
+      <h3>Text Field</h3>
+      <p class="wrap">
+      <label for="tx_label_name" class="blabel">Label Name</label>
+      <input type="text" name="tx_label_name" id="tx_label_name" />
+      </p>
+      <p class="wrap">
+      <label for="tx_max_length" class="blabel">Max Length</label>
+      <select name="tx_max_length" id="tx_max_length">
+         <option value="8">8</option>
+         <option value="16">16</option>
+         <option value="32">32</option>
+         <option value="64">64</option>
+         <option value="128">128</option>
+         <option value="255">255</option>
+      </select>
+      </p>
+      <p class="wrap">
+      
+      <input type="checkbox" name="tx_mandatory" id="tx_mandatory" /><label for="tx_mandatory" class="blabel nextto">Mandatory</label>
+      </p>
+      <p class="wrap">
+      
+      <input type="checkbox" name="tx_static_label" id="tx_static_label" /><label for="tx_static_label" class="blabel nextto">Static Label</label>
+      </p>
+      <p class="wrap">
+      
+      <input type="checkbox" name="tx_inline" id="tx_inline" /><label for="tx_inline" class="blabel nextto">Inline</label>
+      </p>
+      <p class="wrap">
+      <input type="submit" />
+      </p>
+   </form>
+   <form id="email_form" method="post" onsubmit="return false;">
+      <input type="hidden" name="rm" value="v_em">
+      <input type="hidden" name="em_options" value="" id="em_options">
+      <h3>Email</h3>
+      <p class="wrap">
+      <label for="em_label_name" class="blabel">Label Name</label>
+      <input type="text" name="em_label_name" value="Email" id="em_label_name" />
+      </p>
+      <p class="wrap">
+      <label for="em_max_length" class="blabel">Max Length</label>
+      <select name="em_max_length" id="em_max_length">
+         <option value="8">8</option>
+         <option value="16">16</option>
+         <option value="32">32</option>
+         <option selected="selected" value="64">64</option>
+         <option value="128">128</option>
+         <option value="255">255</option>
+      </select>
+      </p>
+      <p class="wrap">
+      
+      <input type="checkbox" name="em_mandatory" id="em_mandatory" /><label for="em_mandatory" class="blabel nextto">Mandatory</label>
+      </p>
+      <p class="wrap">
+      
+      <input type="checkbox" name="em_static_label" id="em_static_label" /><label for="em_static_label" class="blabel nextto">Static Label</label>
+      </p>
+      <p class="wrap">
+      
+      <input type="checkbox" name="em_inline" id="em_inline" /><label for="em_inline" class="blabel nextto">Inline</label>
+      </p>
+      <p class="wrap">
+      <input type="submit" />
+      </p>
+   </form>
+   <form id="textarea_form" method="post" onsubmit="return false;">
+      <input type="hidden" name="rm" value="v_ta">
+      <input type="hidden" name="ta_options" id="ta_options" value=""/>
+      <h3>Text Area</h3>
+      <p class="wrap">
+      <label for="ta_label_name" class="blabel">Label Name</label>
+      <input type="text" name="ta_label_name" id="ta_label_name" />
+      </p>
+      <p class="wrap">
+      <label for="ta_max_length" class="blabel">Max Length</label>
+      <input type="text" name="ta_max_length" id="ta_max_length" />
+      </p>
+      <p class="wrap">
+      
+      <input type="checkbox" name="ta_mandatory" id="ta_mandatory" /><label for="ta_mandatory" class="blabel nextto">Mandatory</label>
+      </p>
+      <p class="wrap">
+      
+      <input type="checkbox" name="ta_static_label" id="ta_static_label" /><label for="ta_static_label" class="blabel nextto">Static Label</label>
+      </p>
+      <p class="wrap">
+      
+      <input type="checkbox" name="ta_inline" id="ta_inline" /><label for="ta_inline" class="blabel nextto">Inline</label>
+      </p>
+      <p class="wrap">
+      <input type="submit" />
+      </p>
+   </form>
+   <form id="checkbox_form" method="post" onsubmit="return false;">
+      <input type="hidden" name="rm" value="v_cb">
+      <h3>Checkbox</h3>
+      <p class="wrap">
+      <label for="cb_label_name" class="blabel">Label Name</label>
+      <input type="text" name="cb_label_name" id="cb_label_name" />
+      </p>
+      <p class="wrap">
+      <label for="cb_max_length" class="blabel">Max Length</label>
+      <select name="cb_max_length" id="cb_max_length">
+         <option value="8">8</option>
+         <option value="16">16</option>
+         <option value="32">32</option>
+         <option value="64">64</option>
+         <option value="128">128</option>
+         <option value="255">255</option>
+         <option value="tinyint">tinyint</option>
+         <option value="smallint">smallint</option>
+         <option value="mediumint">mediumint</option>
+      </select>
+      </p>
+      <input type="hidden" value="0" name="cb_mandatory" id="cb_mandatory" />
+      <input type="hidden" value="checkbox" name="cb_validation" id="cb_validation" />
+      <p class="wrap">
+      
+      <input type="checkbox" name="cb_static_label" id="cb_static_label" /><label for="cb_static_label" class="blabel nextto">Static Label</label>
+      </p>
+      <p class="wrap">
+      
+      <input type="checkbox" name="cb_inline" id="cb_inline" /><label for="cb_inline" class="blabel nextto">Inline</label>
+      </p>
+      <p class="wrap">
+      <input type="submit" />
+      </p>
+   </form>
+   <form id="radio_form" method="post" onsubmit="return false;">
+      <input type="hidden" name="rm" value="v_ra">
+      <h3>Radio buttons</h3>
+      <p class="wrap">
+      <label for="ra_label_name" class="blabel">Label Name</label>
+      <input type="text" name="ra_label_name" id="ra_label_name" />
+      </p>
+      <p class="wrap">
+      <label for="ra_max_length" class="blabel">Max Length</label>
+      <select name="ra_max_length" id="ra_max_length">
+         <option value="8">8</option>
+         <option value="16">16</option>
+         <option value="32">32</option>
+         <option value="64">64</option>
+         <option value="128">128</option>
+         <option value="255">255</option>
+         <option value="tinyint">tinyint</option>
+         <option value="smallint">smallint</option>
+         <option value="mediumint">mediumint</option>
+      </select>
+      </p>
+      <p class="wrap">
+      
+      <input type="checkbox" name="ra_mandatory" id="ra_mandatory" /><label for="ra_mandatory" class="blabel nextto">Mandatory</label>
+      </p>
+      <p class="wrap">
+      
+      <input type="checkbox" name="ra_static_label" id="ra_static_label" /><label for="ra_static_label" class="blabel nextto">Static Label</label>
+      </p>
+      <p class="wrap">
+      
+      <input type="checkbox" name="ra_inline" id="ra_inline" /><label for="ra_inline" class="blabel nextto">Inline</label>
+      </p>
+      <p class="wrap">
+      <input type="submit" />
+      </p>
+   </form>
+   <form id="select_form" method="post" onsubmit="return false;">
+      <input type="hidden" name="rm" value="v_sl">
+      <h3>Drop Down</h3>
+      <p class="wrap">
+         <label for="sl_label_name" class="blabel">Label Name</label>
+         <input type="text" name="sl_label_name" id="sl_label_name" />
+      </p>
+      <p class="wrap">
+      <label for="sl_max_length" class="blabel">Max Length</label>
+      <select name="sl_max_length" id="sl_max_length">
+         <option value="8">8</option>
+         <option value="16">16</option>
+         <option value="32">32</option>
+         <option value="64">64</option>
+         <option value="128">128</option>
+         <option value="255">255</option>
+         <option value="tinyint">tinyint</option>
+         <option value="smallint">smallint</option>
+         <option value="mediumint">mediumint</option>
+      </select>
+      </p>
+      <p class="wrap">
+         
+         <input type="checkbox" name="sl_mandatory" id="sl_mandatory" /><label for="sl_mandatory" class="blabel nextto">Mandatory</label>
+      </p>
+      <p class="wrap">
+      
+      <input type="checkbox" name="sl_static_label" id="sl_static_label" /><label for="sl_static_label" class="blabel nextto">Static Label</label>
+      </p>
+      <p class="wrap">
+      
+      <input type="checkbox" name="sl_inline" id="sl_inline" /><label for="sl_inline" class="blabel nextto">Inline</label>
+      </p>
+      <p class="wrap">
+      <input type="submit" />
+      </p>
+   </form>
+   <form id="file_form" method="post" onsubmit="return false;">
+      <input type="hidden" name="rm" value="v_fl">
+      <h3>File Field</h3>
+      <p class="wrap">
+         <label for="fl_label_name" class="blabel">Label Name</label>
+         <input type="text" name="fl_label_name" id="fl_label_name" />
+      </p>
+      <p class="wrap">
+         <label for="fl_max_length" class="blabel" lab="Max Size in Kb">Max Size in Kb</label>
+         <input type="text" name="fl_max_length" id="fl_max_length">
+      </p>
+      <p class="wrap">
+         
+         <input type="checkbox" name="fl_mandatory" id="fl_mandatory" /><label for="fl_mandatory" class="blabel nextto">Mandatory</label>
+      </p>
+      <p class="wrap">
+      
+      <input type="checkbox" name="fl_static_label" id="fl_static_label" /><label for="fl_static_label" class="blabel nextto">Static Label</label>
+      </p>
+      <p class="wrap">
+      
+      <input type="checkbox" name="fl_inline" id="fl_inline" /><label for="fl_inline" class="blabel nextto">Inline</label>
+      </p>
+      <p class="wrap">
+      <input type="submit" />
+      </p>
+   </form>
+   <form id="tinymce_form" method="post" onsubmit="return false;">
+      <input type="hidden" name="rm" value="v_tm">
+      <h3>Tiny MCE Text Area</h3>
+      <p class="wrap">
+      <label for="tm_label_name" class="blabel">Label Name</label>
+      <input type="text" name="tm_label_name" id="tm_label_name" />
+      </p>
+      <p class="wrap">
+      <label for="tm_max_length" class="blabel">Max Length</label>
+      <input type="text" name="tm_max_length" id="tm_max_length" />
+      </p>
+      <p class="wrap">
+      
+      <input type="checkbox" name="tm_mandatory" id="tm_mandatory" /><label for="tm_mandatory" class="blabel nextto">Mandatory</label>
+      </p>
+      <p class="wrap">
+     
+      <input type="checkbox" name="tm_static_label" id="tm_static_label" /><label for="tm_static_label" class="blabel nextto">Static Label</label>
+      </p>
+      <p class="wrap">
+      
+      <input type="checkbox" name="tm_inline" id="tm_inline" /><label for="tm_inline" class="blabel nextto">Inline</label>
+      </p>
+      <p class="wrap">
+      <input type="submit" />
+      </p>
+   </form>
+   <form id="datepicker_form" method="post" onsubmit="return false;">
+      <input type="hidden" name="rm" value="v_dp">
+      <input type="hidden" name="dp_options" id="dp_options" value=""/>
+      <h3>Date Picker</h3>
+      <p class="wrap">
+      <label for="dp_label_name" class="blabel">Label Name</label>
+      <input type="text" name="dp_label_name" id="dp_label_name" />
+      </p>
+      <p class="wrap">
+      <label for="dp_max_length" class="blabel">Max Length</label>
+      <select name="dp_max_length" id="dp_max_length">
+         <option value="8">8</option>
+         <option value="16">16</option>
+         <option value="32">32</option>
+         <option value="64">64</option>
+         <option value="128">128</option>
+         <option value="255">255</option>
+      </select>
+      </p>
+      <p class="wrap">
+      
+      <input type="checkbox" name="dp_mandatory" id="dp_mandatory" /><label for="dp_mandatory" class="blabel nextto">Mandatory</label>
+      </p>
+      <p class="wrap">
+     
+      <input type="checkbox" name="dp_static_label" id="dp_static_label" /> <label for="dp_static_label" class="blabel" nextto>Static Label</label>
+      </p>
+      <p class="wrap">
+      
+      <input type="checkbox" name="dp_inline" id="dp_inline" /><label for="dp_inline" class="blabel nextto">Inline</label>
+      </p>
+      <p class="wrap">
+      <input type="submit" />
+      </p>
+   </form>
+   <form id="lineoftext_form" method="post" onsubmit="return false;">
+      <input type="hidden" name="rm" value="v_lt">
+      <input type="hidden" name="lt_options" id="lt_options" value=""/>
+      <input type="hidden" name="lt_max_length" id="lt_max_length" value=""/>
+      <input type="hidden" name="lt_mandatory" id="lt_mandatory" />
+      <input type="hidden" name="lt_static_label" id="lt_static_label" />
+      <input type="hidden" name="lt_inline" id="lt_inline" />
+      <h3>Line of Text</h3>
+   <p class="wrap">
+      <label for="lt_label_name" class="blabel">Line of Text</label>
+      <input type="text" name="lt_label_name" id="lt_label_name" />
+   </p>
+      <p class="wrap">
+      <input type="submit" />
+      </p>
+   </form>
+   <form id="session_variable_form" method="post" onsubmit="return false;">
+      <input type="hidden" name="rm" value="v_sv">
+      <input type="hidden" name="sv_options" id="sv_options" value=""/>
+      <input type="hidden" name="sv_max_length" id="sv_max_length" value=""/>
+      <input type="hidden" name="sv_mandatory" id="sv_mandatory" />
+      <input type="hidden" name="sv_static_label" id="sv_static_label" />
+      <input type="hidden" name="sv_inline" id="sv_inline" />
+      <h3>Session Variable</h3>
+<p class="wrap">
+   <label for="sv_label_name" class="blabel">Label Name</label>
+   <input type="text" name="sv_label_name" id="sv_label_name" />
+</p>
+      <p class="wrap">
+      <input type="submit" />
+      </p>
+   </form>
+</div>   <!-- End Form Vault -->
+<hr class="hspc5" />
+<div id="output"></div>
+</div>
+<hr class="hspc50" />
+
+<!-- Load javascript libraries -->
+<!--<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>-->
+<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.8.11/jquery-ui.min.js"></script>
+<script src="<% request.uri_base %>/javascripts/form/jquery.form.js" type="text/javascript"></script>
+<script type="text/javascript" src="<% request.uri_base %>/javascripts/form_Functions/form_functions.js"></script>
+<script type="text/javascript" src="<% request.uri_base %>/javascripts/fancybox-1.3.4/jquery.fancybox-1.3.4.pack.js"></script>
+<script type="text/javascript" src="<% request.uri_base %>/javascripts/listable/jquery.listable.js" ></script>
+<script type="text/javascript" src="<% request.uri_base %>/javascripts/model_builder.js" ></script>

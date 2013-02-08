@@ -1,0 +1,9 @@
+[submodule "public/javascripts/listable"]
+	path = public/javascripts/listable
+	url = https://github.com/lejeunerenard/listable.git
+[submodule "public/javascripts/form_functions"]
+	path = public/javascripts/form_functions
+	url = https://github.com/HighgateCross/Form-Functions.git
+[submodule "public/javascripts/form"]
+	path = public/javascripts/form
+	url = https://github.com/malsup/form.git

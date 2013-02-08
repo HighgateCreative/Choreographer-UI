@@ -14,6 +14,7 @@ WriteMakefile(
     PREREQ_PM => {
         'Test::More' => 0,
         'YAML'       => 0,
+        'Template'   => 0,
         'Dancer'     => 1.311,
         'Dancer::Plugin::DBIC' => 0,
         'DBIx::Class::Schema::Loader' => 0,

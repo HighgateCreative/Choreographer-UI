@@ -129,7 +129,7 @@ lineoftext = {
 };
 var element_types = [textfield,emailfield,textareafield,tinymcefield,checkboxfield,radiofield,selectfield,filefield,datepicker,lineoftext,sessionvariable];
 
-/*function normalize_field_labels(element) {   
+function normalize_field_labels(element) {   
    if(element){
       if ($('#'+$(element).attr('id')+' input[name="rm"]').val()) {
          var prefix = $('#'+$(element).attr('id')+' input[name="rm"]').val().replace(/v_/, '')+"_";
@@ -162,7 +162,7 @@ var element_types = [textfield,emailfield,textareafield,tinymcefield,checkboxfie
          $(this).text(lab);
       });
    }
-}*/
+}
 $(function() {
    // Kill caching
    $.ajaxSetup({ cache: false });
@@ -221,7 +221,7 @@ $(function() {
       listable_form_setup({
          form_id: this.formid,
          prefix: this.prefix,
-         url: '/xmpx/create_form_code.cgi',
+         url: '/models/accept',
          element: this,
          beforeSave: this.beforeSave,
          afterSave: this.afterSave

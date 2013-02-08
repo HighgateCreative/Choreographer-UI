@@ -16,6 +16,14 @@ prefix '/models' => sub {
    get '/add' => sub {
        template 'models/model_builder_form';
    };
+   post '/add' => sub {
+      set serializer => 'JSON';
+      return params;
+   };
+   post '/accept' => sub {
+      set serializer => 'JSON';
+      return { success => [ { success => "I always accept" } ] };
+   };
 };  # End Models
 
 true;

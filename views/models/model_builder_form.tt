@@ -2,23 +2,6 @@
 	<link rel="stylesheet" type="text/css" href="<% request.uri_base %>/css/form.css" />
 	<link media="screen" type="text/css" href="<% request.uri_base %>/javascripts/fancybox-1.3.4/jquery.fancybox-1.3.4.css" rel="stylesheet">
 	<link media="all" href="http://code.jquery.com/ui/1.10.0/themes/base/jquery-ui.css" rel="stylesheet">
-   <script type="text/javascript">
-	$(function(){
-		$('#open_extras').toggle(function() {
-		      $('#extra_stuff').css('display','block');
-		      $('.arrows').replaceWith('<span class="arrows">&#9660;</span> ')
-		   }, function() {
-		      $('#extra_stuff').css('display','none');
-		      $('.arrows').replaceWith('<span class="arrows">&#9654;</span> ')
-		   });
-		$('#readable_name').blur(function(){
-		   var regex = / /g;
-		   var name = $('#readable_name').val().replace(regex,'_');
-		   $('#table_name').val(name.toLowerCase());
-		});
-
-	});
-   </script>
    <style>
       .field_divider[hil="highlighted"] {
          background-color: #aaa;

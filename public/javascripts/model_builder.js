@@ -7,7 +7,8 @@ textfield = {
 	display: function(vars) {
 		return '<label>' + vars.label_name + '</label>\
 		<input type="text" />';
-	}
+	},
+   url: '/models/textfield'
 };
 emailfield = {
 	formid: 'email_form',
@@ -17,7 +18,8 @@ emailfield = {
 	display: function(vars) {
 		return '<label>' + vars.label_name + '</label>\
 		<input type="text" />';
-	}
+	},
+   url: '/models/emailfield'
 };
 textareafield = {
 	formid: 'textarea_form',
@@ -27,7 +29,8 @@ textareafield = {
 	display: function(vars) {
 		return '<label>'+ vars.label_name +'</label>\
                <textarea></textarea>';
-	}
+	},
+   url: '/models/textareafield'
 };
 tinymcefield = {
 	formid: 'tinymce_form',
@@ -37,7 +40,8 @@ tinymcefield = {
 	display: function(vars) {
 		return '<label>'+ vars.label_name +' (Tiny MCE)</label>\
                <textarea></textarea>';
-	}
+	},
+   url: '/models/tinymce'
 };
 checkboxfield = {
 	formid: 'checkbox_form',
@@ -47,7 +51,8 @@ checkboxfield = {
 	display: function(vars) {
 		return '<input type="checkbox" />\
                <label class="checkbox_label">'+vars.label_name+'</label>';
-	}
+	},
+   url: '/models/checkboxfield'
 };
 radiofield = {
 	formid: 'radio_form',
@@ -65,7 +70,8 @@ radiofield = {
                }
 		return '<label>'+vars.label_name+'</label>\
                '+options_html;
-	}
+	},
+   url: '/models/radiofield'
 };
 selectfield = {
 	formid: 'select_form',
@@ -84,7 +90,8 @@ selectfield = {
 		<select>\
                '+options_html+'\
                </select>';
-	}
+	},
+   url: '/models/selectfield'
 };
 filefield = {
 	formid: 'file_form',
@@ -94,7 +101,8 @@ filefield = {
 	display: function(vars) {
 		return '<label>'+vars.label_name+'</label>\
                <input type="file" />';
-	}
+	},
+   url: '/models/filefield'
 };
 datepicker = {
 	formid: 'datepicker_form',
@@ -107,7 +115,8 @@ datepicker = {
 	},
    afterSave: function(itemType) {
 		$('.date_picker').datepicker( { dateFormat: "dd-mm-yy" } );
-   }
+	},
+   url: '/models/datepicker'
 };
 sessionvariable = {
 	formid: 'session_variable_form',
@@ -116,7 +125,8 @@ sessionvariable = {
 	variables: ['label_name','max_length','mandatory','static_label','inline','options'],
 	display: function(vars) {
 		return '<label>' + vars.label_name + ' (Session variable)</label>';
-	}
+	},
+   url: '/models/session_variable'
 };
 lineoftext = {
 	formid: 'lineoftext_form',
@@ -125,7 +135,8 @@ lineoftext = {
 	variables: ['label_name','max_length','mandatory','static_label','inline','options'],
 	display: function(vars) {
 		return '<label>' + vars.label_name + '</label>';
-	}
+	},
+   url: '/models/line_of_text'
 };
 var element_types = [textfield,emailfield,textareafield,tinymcefield,checkboxfield,radiofield,selectfield,filefield,datepicker,lineoftext,sessionvariable];
 
@@ -190,7 +201,7 @@ $(function() {
          type: "POST",
          dataType: 'json',
          beforeSubmit: function() {
-            normalize_field_labels(this);
+            normalize_field_labels($('#'+options.form_id));
          },
          success: function(data) {
             parse_results({
@@ -218,14 +229,31 @@ $(function() {
    };
 
    $.each(element_types, function(i, el) {
+      if (!this.url) {
+         this.url = '/models';
+      }
+      
       listable_form_setup({
          form_id: this.formid,
          prefix: this.prefix,
-         url: '/models/accept',
+         url: this.url,
          element: this,
          beforeSave: this.beforeSave,
          afterSave: this.afterSave
       });
+   });
+
+   $('#open_extras').toggle(function() {
+         $('#extra_stuff').css('display','block');
+         $('.arrows').replaceWith('<span class="arrows">&#9660;</span> ')
+      }, function() {
+         $('#extra_stuff').css('display','none');
+         $('.arrows').replaceWith('<span class="arrows">&#9654;</span> ')
+      });
+   $('#readable_name').blur(function(){
+      var regex = / /g;
+      var name = $('#readable_name').val().replace(regex,'_');
+      $('#table_name').val(name.toLowerCase());
    });
 
 	// Invoking as listable

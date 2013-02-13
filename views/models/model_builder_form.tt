@@ -76,10 +76,12 @@
    </p>
    <p class="special_links"><a href="#" id="open_extras">Extras <span class="arrows">&#9654;</span></a></p>
    <div id="extra_stuff">
+      <!--
       <p class="wrap">
          <input type="checkbox" name="overlay_cb" id="overlay_cb" /><label for="overlay_cb" class="blabel nextto" >Include 'Processing' Overlay</label>
          
       </p>
+      -->
    </div>
    <!-- TODO
    <p class="wrap">
@@ -515,3 +517,30 @@
 <script type="text/javascript" src="<% request.uri_base %>/javascripts/fancybox-1.3.4/jquery.fancybox-1.3.4.pack.js"></script>
 <script type="text/javascript" src="<% request.uri_base %>/javascripts/listable/jquery.listable.js" ></script>
 <script type="text/javascript" src="<% request.uri_base %>/javascripts/model_builder.js" ></script>
+<script type="text/javascript">
+   // Additional semicolon to clear any syntax problems previous
+   ;
+   $(function() {
+      // Form submission
+      $('#model_form').ajaxForm({
+         url: '/models',
+         type: <% IF model.id %>"PUT"<% ELSE %>"POST"<% END %>,
+         dataType: 'json',
+         beforeSubmit: function() {
+            normalize_labels($('#model_form'));
+         },
+         success: function(data) {
+            parse_results({
+               result: data,
+               overlay: true,
+               form: 'model_form',
+               msgdiv: 'msgdiv',
+               not_reset_form: true,
+               leave_open: true,
+               success: function(data) {
+               }
+            });
+         }
+      });
+   });
+</script>

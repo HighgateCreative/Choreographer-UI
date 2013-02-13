@@ -243,6 +243,7 @@ $(function() {
       });
    });
 
+   // Form helpers
    $('#open_extras').toggle(function() {
          $('#extra_stuff').css('display','block');
          $('.arrows').replaceWith('<span class="arrows">&#9660;</span> ')

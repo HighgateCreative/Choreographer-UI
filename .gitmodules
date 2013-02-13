@@ -7,3 +7,6 @@
 [submodule "public/javascripts/form"]
 	path = public/javascripts/form
 	url = https://github.com/malsup/form.git
+[submodule "lib/Stagehand"]
+	path = lib/Stagehand
+	url = https://github.com/HighgateCross/Stagehand.git

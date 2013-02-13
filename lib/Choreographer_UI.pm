@@ -1,6 +1,7 @@
 package Choreographer_UI;
 use Dancer ':syntax';
 use Dancer::Plugin::DBIC;
+use Stagehand::Stagehand;
 use Validate;
 
 our $VERSION = '0.1';

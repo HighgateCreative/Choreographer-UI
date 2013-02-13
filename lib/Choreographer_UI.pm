@@ -2,6 +2,7 @@ package Choreographer_UI;
 use Dancer ':syntax';
 use Dancer::Plugin::DBIC;
 use Stagehand::Stagehand;
+use Data::Dumper;
 use Validate;
 
 our $VERSION = '0.1';
@@ -37,6 +38,20 @@ prefix '/models' => sub {
       } else {
          #resultset('Model')->find(param 'id')->update($msg);
          $success = "Model updated Successfully";
+      }
+      if ($msg->{'app_folder'}) {
+         my $obj; # Obj to submit to choreographer
+         my $app_folder = $msg->{'app_folder'};
+         delete $msg->{'app_folder'};
+         push @$obj, {
+                        settings => {
+                           app_folder => $app_folder
+                        },
+                        models => [
+                           $msg
+                        ]
+                     };
+         my $response = submit_json($obj);
       }
       return { success => [ { success => $success } ] };
    };
@@ -430,11 +445,12 @@ sub validate_session_variable {
 }
 
 # ===== Helper Functions =====
-sub fillinform {
-   my $template = shift;
-   my $fifvalues = shift;
-   my $html = template $template, $fifvalues;
-   return HTML::FillInForm->fill( \$html, $fifvalues );
-}
+sub submit_json {
+   my $obj = shift;
 
+   #use Choreographer;
+   debug "Obj: ".Dumper($obj)."\n";
+
+   return 1;
+}
 true;

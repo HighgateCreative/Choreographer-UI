@@ -31,10 +31,10 @@ sub val_number {
 		return (undef, { msg => 'cannot be blank' });
 	} elsif ($len && (length($value) > $len) ) {
 		return (undef, { msg => 'is limited to '.$len.' characters' });
-	} elsif ($value && $value !~ /^([-\.]*\d[\d\.-]*)$/) {
+	} elsif ($value !~ /^([-\.]*\d[\d\.-]*)$/) {
 		return (undef, { msg => 'can only use numbers and . or -' });
 	} else {
-		if ($value) {	# This is to prevent empty strings from returning as the folder name.
+		if ($value ne '') {	# This is to prevent empty strings from returning as the folder name.
 			return ($1);	# $1 is a tricky value. If value is blank $1 will be the name of the folder from the instance script.
 		} else {
 			return '';	# Take that $1. Conditional statement to the face.

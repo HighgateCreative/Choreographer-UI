@@ -67,6 +67,10 @@
       <input type="text" name="app_folder" id="app_folder" />
    </p>
    <p class="wrap">
+      <label for="app_name" class="blabel">App Name</label>
+      <input type="text" name="app_name" id="app_name" />
+   </p>
+   <p class="wrap">
       <label for="readable_name" class="blabel">Readable Name</label>
       <input type="text" name="readable_name" id="readable_name" maxlength="32" />
    </p>
@@ -376,6 +380,10 @@
          <p class="wrap">
          
          <input type="checkbox" name="sl_inline" id="sl_inline" /><label for="sl_inline" class="blabel nextto">Inline</label>
+         </p>
+         <p class="wrap">
+            <label for="sl_options" class="label">Options</label>
+            <input type="text" name="sl_options" id="sl_options" />
          </p>
          <p class="wrap">
          <input type="submit" />

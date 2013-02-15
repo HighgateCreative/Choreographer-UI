@@ -80,7 +80,7 @@ sub val_int {
 	} elsif ($value !~ /^[-]?\d+$/) {
 		return (undef, { msg => 'can only use numbers' });
 	} else {
-    	return ($1);
+    	return ($value);
 	}
 }
 

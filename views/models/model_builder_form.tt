@@ -542,12 +542,23 @@
                result: data,
                overlay: true,
                form: 'model_form',
-               msgdiv: 'msgdiv',
+               msgdiv: 'msgs',
                not_reset_form: true,
                leave_open: true,
                success: function(data) {
                }
             });
+            if (data.output) {
+               if ( data.output instanceof Array ) {
+                  $.each(data.output, function(i,el) {
+                     var output = $('<pre></pre>');
+                     output.text(el);
+                     $('#output').append(output);
+                  });
+               } else {
+                  $('#output').append('<pre>' + data.output + '</pre>');
+               }
+            }
          }
       });
    });

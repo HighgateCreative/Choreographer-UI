@@ -4,11 +4,13 @@ use Dancer::Plugin::DBIC;
 use Stagehand::Stagehand;
 use Data::Dumper;
 use Validate;
-use JSON;
 
 use lib '../Choreographer/lib/';
 
 use Dancer::Choreographer;
+
+# Load everything up
+setting_the_stage();
 
 our $VERSION = '0.1';
 
@@ -44,6 +46,7 @@ prefix '/models' => sub {
          #resultset('Model')->find(param 'id')->update($msg);
          $success = "Model updated Successfully";
       }
+      my $response;
       if ($msg->{'app_folder'}) {
          my $obj; # Obj to submit to choreographer
          my $app_path = $msg->{'app_folder'};
@@ -63,9 +66,15 @@ prefix '/models' => sub {
                            $msg
                         ]
                      };
-         my $response = submit_json($obj);
+         $response = submit_json($obj);
       }
-      return { success => [ { success => $success } ] };
+      if (ref $response eq 'HASH' and @{$response->{success}}) {
+         return { success => [ { success => $response->{success} } ],
+                  output  => $response->{output} };
+      } else {
+         return { errors => $response->{errors},
+                  output  => $response->{output} };
+      }
    };
 
    # ===== Views =====
@@ -197,7 +206,6 @@ sub validate_model {
    if ($sql{'app_folder'}) {
       $app_name_mand = 1;
    }
-   debug $app_name_mand;
 	($sql{'app_name'}, $error) = Validate::val_text( $app_name_mand, 64, $params->{'app_name'} );
 		if ( $error-> { msg } ) { push @error_list, { "app_name" => $error->{ msg } }; }	
 	($sql{'readable_name'}, $error) = Validate::val_text( 1, 64, $params->{'readable_name'} );
@@ -216,26 +224,30 @@ sub validate_model {
    my $orders = (ref $params->{'order[]'} eq 'ARRAY') ? $params->{'order[]'} : [$params->{'order[]'}];
    my $types = (ref $params->{'type[]'} eq 'ARRAY') ? $params->{'type[]'} : [$params->{'type[]'}];
 
-   for my $i ( 0 .. $#$labels ) {
-      my %element;
-      ($sql{'attributes'}->[$i]{'label'}, $error) = Validate::val_text( 1, 64, $labels->[$i] );
-         if ( $error-> { msg } ) { push @error_list, { "generic" => "Label Name: ".$error->{ msg } }; }	
-      ($sql{'attributes'}->[$i]{'max_length'}, $error) = Validate::val_int( 1, $max_lengths->[$i] );
-         if ( $error-> { msg } ) { push @error_list, { "generic" => "Max length: ".$error->{ msg } }; }	
-      $sql{'attributes'}->[$i]{'mandatory'} = ($mandatory->[$i]) ? 1 : 0;
-      $sql{'attributes'}->[$i]{'static_label'} = ($static_label->[$i]) ? 1 : 0;
-      $sql{'attributes'}->[$i]{'inline'} = ($inline->[$i]) ? 1 : 0;
+   if ( $params->{'label_name[]'} ) {
+      for my $i ( 0 .. $#$labels ) {
+         my %element;
+         ($sql{'attributes'}->[$i]{'label'}, $error) = Validate::val_text( 1, 64, $labels->[$i] );
+            if ( $error-> { msg } ) { push @error_list, { "generic" => "Label Name: ".$error->{ msg } }; }	
+         ($sql{'attributes'}->[$i]{'max_length'}, $error) = Validate::val_int( 1, $max_lengths->[$i] );
+            if ( $error-> { msg } ) { push @error_list, { "generic" => "Max length: ".$error->{ msg } }; }	
+         $sql{'attributes'}->[$i]{'mandatory'} = ($mandatory->[$i]) ? 1 : 0;
+         $sql{'attributes'}->[$i]{'static_label'} = ($static_label->[$i]) ? 1 : 0;
+         $sql{'attributes'}->[$i]{'inline'} = ($inline->[$i]) ? 1 : 0;
 
-      @{ $sql{'attributes'}->[$i]{'options'} } = ($options->[$i] eq 'undefined') ? () : split(',', $options->[$i]);
-      for my $j ( 0 .. $#{ $sql{'attributes'}->[$i]{'options'} }) {
-         ($sql{'attributes'}->[$i]{'options'}->[$j], $error) = Validate::val_text( 1, 64, $sql{'attributes'}->[$i]{'options'}->[$j] );
-            if ( $error-> { msg } ) { push @error_list, { "generic" => "Option: ".$error->{ msg } }; }	
+         if ($options->[$i]) {
+            @{ $sql{'attributes'}->[$i]{'options'} } = ($options->[$i] eq 'undefined') ? () : split(',', $options->[$i]);
+            for my $j ( 0 .. $#{ $sql{'attributes'}->[$i]{'options'} }) {
+               ($sql{'attributes'}->[$i]{'options'}->[$j], $error) = Validate::val_text( 1, 64, $sql{'attributes'}->[$i]{'options'}->[$j] );
+                  if ( $error-> { msg } ) { push @error_list, { "generic" => "Option: ".$error->{ msg } }; }	
+            }
+         }
+
+         ($sql{'attributes'}->[$i]{'order'}, $error) = Validate::val_number( 1, 16, $orders->[$i] );
+            if ( $error-> { msg } ) { push @error_list, { "generic" => "Order: ".$error->{ msg } }; }	
+         ($sql{'attributes'}->[$i]{'type'}, $error) = Validate::val_text( 1, 64, $types->[$i] );
+            if ( $error-> { msg } ) { push @error_list, { "generic" => "Type: ".$error->{ msg } }; }	
       }
-
-      ($sql{'attributes'}->[$i]{'order'}, $error) = Validate::val_number( 1, 16, $orders->[$i] );
-         if ( $error-> { msg } ) { push @error_list, { "generic" => "Order: ".$error->{ msg } }; }	
-      ($sql{'attributes'}->[$i]{'type'}, $error) = Validate::val_text( 1, 64, $types->[$i] );
-         if ( $error-> { msg } ) { push @error_list, { "generic" => "Type: ".$error->{ msg } }; }	
    }
 
    for my $key ( keys %sql ) {
@@ -467,11 +479,8 @@ sub validate_session_variable {
 sub submit_json {
    my $obj = shift;
 
-   #use Choreographer;
-   debug "Obj: ".Dumper($obj)."\n";
    my $response = choreograph(to_json($obj));
-   debug "Response: ".Dumper($response)."\n";
 
-   return 1;
+   return $response;
 }
 true;

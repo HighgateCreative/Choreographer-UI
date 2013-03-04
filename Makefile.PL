@@ -20,6 +20,8 @@ WriteMakefile(
         'DBIx::Class::Schema::Loader' => 0,
         'Email::Valid' => 0,
         'HTML::TagFilter' => 0,
+				'PPI'	=> 0,
+				'File::Which'	=> 0,
     },
     dist                => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
     clean               => { FILES => 'Choreographer_UI-*' },

@@ -1,0 +1,10 @@
+requires 'Test::More';
+requires 'YAML';
+requires 'Template';
+requires 'Dancer';
+requires 'Dancer::Plugin::DBIC';
+requires 'DBIx::Class::Schema::Loader';
+requires 'Email::Valid';
+requires 'HTML::TagFilter';
+requires 'PPI';
+requires 'File::Which';

@@ -15,7 +15,8 @@ setting_the_stage();
 our $VERSION = '0.1';
 
 get '/' => sub {
-    template 'index';
+   forward '/models/add';
+    #template 'index';
 };
 
 # ===== Models =====

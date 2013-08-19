@@ -10,3 +10,6 @@
 [submodule "lib/Stagehand"]
 	path = lib/Stagehand
 	url = https://github.com/HighgateCross/Stagehand.git
+[submodule "lib/Validate"]
+	path = lib/Validate
+	url = https://github.com/HighgateCross/Validate.git

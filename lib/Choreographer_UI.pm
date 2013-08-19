@@ -3,7 +3,7 @@ use Dancer ':syntax';
 use Dancer::Plugin::DBIC;
 use Stagehand::Stagehand;
 use Data::Dumper;
-use Validate;
+use Validate::Validate;
 
 use lib '../Choreographer/lib/';
 
@@ -201,17 +201,17 @@ sub validate_model {
    my $params = shift;
 	my (%sql, $error, @error_list, $stmt);
 
-	($sql{'app_folder'}, $error) = Validate::val_text( 0, 64, $params->{'app_folder'} );
+	($sql{'app_folder'}, $error) = Validate::Validate::val_text( 0, 64, $params->{'app_folder'} );
 		if ( $error-> { msg } ) { push @error_list, { "app_folder" => $error->{ msg } }; }	
    my $app_name_mand = 0;
    if ($sql{'app_folder'}) {
       $app_name_mand = 1;
    }
-	($sql{'app_name'}, $error) = Validate::val_text( $app_name_mand, 64, $params->{'app_name'} );
+	($sql{'app_name'}, $error) = Validate::Validate::val_text( $app_name_mand, 64, $params->{'app_name'} );
 		if ( $error-> { msg } ) { push @error_list, { "app_name" => $error->{ msg } }; }	
-	($sql{'readable_name'}, $error) = Validate::val_text( 1, 64, $params->{'readable_name'} );
+	($sql{'readable_name'}, $error) = Validate::Validate::val_text( 1, 64, $params->{'readable_name'} );
 		if ( $error-> { msg } ) { push @error_list, { "readable_name" => $error->{ msg } }; }	
-	($sql{'table_name'}, $error) = Validate::val_text( 1, 64, $params->{'table_name'} );
+	($sql{'table_name'}, $error) = Validate::Validate::val_text( 1, 64, $params->{'table_name'} );
 		if ( $error-> { msg } ) { push @error_list, { "table_name" => $error->{ msg } }; }	
 	$sql{'write_file'} = ($params->{'write_file'}) ? 1 : 0;
 	$sql{'overlay'} = ($params->{'overlay'}) ? 1 : 0;
@@ -228,9 +228,9 @@ sub validate_model {
    if ( $params->{'label_name[]'} ) {
       for my $i ( 0 .. $#$labels ) {
          my %element;
-         ($sql{'attributes'}->[$i]{'label'}, $error) = Validate::val_text( 1, 64, $labels->[$i] );
+         ($sql{'attributes'}->[$i]{'label'}, $error) = Validate::Validate::val_text( 1, 64, $labels->[$i] );
             if ( $error-> { msg } ) { push @error_list, { "generic" => "Label Name: ".$error->{ msg } }; }	
-         ($sql{'attributes'}->[$i]{'max_length'}, $error) = Validate::val_int( 1, $max_lengths->[$i] );
+         ($sql{'attributes'}->[$i]{'max_length'}, $error) = Validate::Validate::val_int( 1, $max_lengths->[$i] );
             if ( $error-> { msg } ) { push @error_list, { "generic" => "Max length: ".$error->{ msg } }; }	
          $sql{'attributes'}->[$i]{'mandatory'} = ($mandatory->[$i]) ? 1 : 0;
          $sql{'attributes'}->[$i]{'static_label'} = ($static_label->[$i]) ? 1 : 0;
@@ -239,14 +239,14 @@ sub validate_model {
          if ($options->[$i]) {
             @{ $sql{'attributes'}->[$i]{'options'} } = ($options->[$i] eq 'undefined') ? () : split(',', $options->[$i]);
             for my $j ( 0 .. $#{ $sql{'attributes'}->[$i]{'options'} }) {
-               ($sql{'attributes'}->[$i]{'options'}->[$j], $error) = Validate::val_text( 1, 64, $sql{'attributes'}->[$i]{'options'}->[$j] );
+               ($sql{'attributes'}->[$i]{'options'}->[$j], $error) = Validate::Validate::val_text( 1, 64, $sql{'attributes'}->[$i]{'options'}->[$j] );
                   if ( $error-> { msg } ) { push @error_list, { "generic" => "Option: ".$error->{ msg } }; }	
             }
          }
 
-         ($sql{'attributes'}->[$i]{'order'}, $error) = Validate::val_number( 1, 16, $orders->[$i] );
+         ($sql{'attributes'}->[$i]{'order'}, $error) = Validate::Validate::val_number( 1, 16, $orders->[$i] );
             if ( $error-> { msg } ) { push @error_list, { "generic" => "Order: ".$error->{ msg } }; }	
-         ($sql{'attributes'}->[$i]{'type'}, $error) = Validate::val_text( 1, 64, $types->[$i] );
+         ($sql{'attributes'}->[$i]{'type'}, $error) = Validate::Validate::val_text( 1, 64, $types->[$i] );
             if ( $error-> { msg } ) { push @error_list, { "generic" => "Type: ".$error->{ msg } }; }	
       }
    }
@@ -266,9 +266,9 @@ sub validate_textfield {
    my (%sql, $error, @error_list);
 	my $prefix = 'tx_';
 	
-   ($sql{'form_name'}, $error) = Validate::val_text( 1, 64, $params->{$prefix.'label_name'} );  # check field label
+   ($sql{'form_name'}, $error) = Validate::Validate::val_text( 1, 64, $params->{$prefix.'label_name'} );  # check field label
       if ( $error-> { msg } ) { push @error_list, { $prefix."label_name" => $error->{ msg } }; }
-   ($sql{'form_name'}, $error) = Validate::val_selected( $params->{$prefix.'max_length'} );   # check field length
+   ($sql{'form_name'}, $error) = Validate::Validate::val_selected( $params->{$prefix.'max_length'} );   # check field length
       if ( $error-> { msg } ) { push @error_list, { $prefix."max_length" => $error->{ msg } }; }
 
    for my $key ( keys %sql ) { 
@@ -286,9 +286,9 @@ sub validate_emailfield {
    my (%sql, $error, @error_list);
 	my $prefix = 'em_';
 	
-   ($sql{'form_name'}, $error) = Validate::val_text( 1, 64, $params->{$prefix.'label_name'} );  # check field label
+   ($sql{'form_name'}, $error) = Validate::Validate::val_text( 1, 64, $params->{$prefix.'label_name'} );  # check field label
       if ( $error-> { msg } ) { push @error_list, { $prefix."label_name" => $error->{ msg } }; }
-   ($sql{'form_name'}, $error) = Validate::val_selected( $params->{$prefix.'max_length'} );   # check field length
+   ($sql{'form_name'}, $error) = Validate::Validate::val_selected( $params->{$prefix.'max_length'} );   # check field length
       if ( $error-> { msg } ) { push @error_list, { $prefix."max_length" => $error->{ msg } }; }
 
    for my $key ( keys %sql ) { 
@@ -306,9 +306,9 @@ sub validate_textareafield {
    my (%sql, $error, @error_list);
 	my $prefix = 'ta_';
 	
-   ($sql{'form_name'}, $error) = Validate::val_text( 1, 64, $params->{$prefix.'label_name'} );  # check field label
+   ($sql{'form_name'}, $error) = Validate::Validate::val_text( 1, 64, $params->{$prefix.'label_name'} );  # check field label
       if ( $error-> { msg } ) { push @error_list, { $prefix."label_name" => $error->{ msg } }; }
-   ($sql{'form_name'}, $error) = Validate::val_number( 1, 8, $params->{$prefix.'max_length'} );   # check field length
+   ($sql{'form_name'}, $error) = Validate::Validate::val_number( 1, 8, $params->{$prefix.'max_length'} );   # check field length
       if ( $error-> { msg } ) { push @error_list, { $prefix."max_length" => $error->{ msg } }; }
 
    for my $key ( keys %sql ) { 
@@ -326,9 +326,9 @@ sub validate_checkboxfield {
    my (%sql, $error, @error_list);
 	my $prefix = 'cb_';
 	
-   ($sql{'form_name'}, $error) = Validate::val_text( 1, 64, $params->{$prefix.'label_name'} );  # check field label
+   ($sql{'form_name'}, $error) = Validate::Validate::val_text( 1, 64, $params->{$prefix.'label_name'} );  # check field label
       if ( $error-> { msg } ) { push @error_list, { $prefix."label_name" => $error->{ msg } }; }
-   ($sql{'form_name'}, $error) = Validate::val_selected( $params->{$prefix.'max_length'} );   # check field length
+   ($sql{'form_name'}, $error) = Validate::Validate::val_selected( $params->{$prefix.'max_length'} );   # check field length
       if ( $error-> { msg } ) { push @error_list, { $prefix."max_length" => $error->{ msg } }; }
 
    for my $key ( keys %sql ) { 
@@ -346,9 +346,9 @@ sub validate_radiofield {
    my (%sql, $error, @error_list);
 	my $prefix = 'ra_';
 	
-   ($sql{'form_name'}, $error) = Validate::val_text( 1, 64, $params->{$prefix.'label_name'} );  # check field label
+   ($sql{'form_name'}, $error) = Validate::Validate::val_text( 1, 64, $params->{$prefix.'label_name'} );  # check field label
       if ( $error-> { msg } ) { push @error_list, { $prefix."label_name" => $error->{ msg } }; }
-   ($sql{'form_name'}, $error) = Validate::val_selected( $params->{$prefix.'max_length'} );   # check field length
+   ($sql{'form_name'}, $error) = Validate::Validate::val_selected( $params->{$prefix.'max_length'} );   # check field length
       if ( $error-> { msg } ) { push @error_list, { $prefix."max_length" => $error->{ msg } }; }
 
    for my $key ( keys %sql ) { 
@@ -366,9 +366,9 @@ sub validate_selectfield {
    my (%sql, $error, @error_list);
 	my $prefix = 'sl_';
 	
-   ($sql{'form_name'}, $error) = Validate::val_text( 1, 64, $params->{$prefix.'label_name'} );  # check field label
+   ($sql{'form_name'}, $error) = Validate::Validate::val_text( 1, 64, $params->{$prefix.'label_name'} );  # check field label
       if ( $error-> { msg } ) { push @error_list, { $prefix."label_name" => $error->{ msg } }; }
-   ($sql{'form_name'}, $error) = Validate::val_selected( $params->{$prefix.'max_length'} );   # check field length
+   ($sql{'form_name'}, $error) = Validate::Validate::val_selected( $params->{$prefix.'max_length'} );   # check field length
       if ( $error-> { msg } ) { push @error_list, { $prefix."max_length" => $error->{ msg } }; }
 
    for my $key ( keys %sql ) { 
@@ -386,9 +386,9 @@ sub validate_filefield {
    my (%sql, $error, @error_list);
 	my $prefix = 'fl_';
 	
-   ($sql{'form_name'}, $error) = Validate::val_text( 1, 64, $params->{$prefix.'label_name'} );  # check field label
+   ($sql{'form_name'}, $error) = Validate::Validate::val_text( 1, 64, $params->{$prefix.'label_name'} );  # check field label
       if ( $error-> { msg } ) { push @error_list, { $prefix."label_name" => $error->{ msg } }; }
-   ($sql{'form_name'}, $error) = Validate::val_text( 1, 16, $params->{$prefix.'max_length'} );   # check field length
+   ($sql{'form_name'}, $error) = Validate::Validate::val_text( 1, 16, $params->{$prefix.'max_length'} );   # check field length
       if ( $error-> { msg } ) { push @error_list, { $prefix."max_length" => $error->{ msg } }; }
 
    for my $key ( keys %sql ) { 
@@ -406,9 +406,9 @@ sub validate_tinymce {
    my (%sql, $error, @error_list);
 	my $prefix = 'tm_';
 	
-   ($sql{'form_name'}, $error) = Validate::val_text( 1, 64, $params->{$prefix.'label_name'} );  # check field label
+   ($sql{'form_name'}, $error) = Validate::Validate::val_text( 1, 64, $params->{$prefix.'label_name'} );  # check field label
       if ( $error-> { msg } ) { push @error_list, { $prefix."label_name" => $error->{ msg } }; }
-   ($sql{'form_name'}, $error) = Validate::val_number( 1, 8, $params->{$prefix.'max_length'} );   # check field length
+   ($sql{'form_name'}, $error) = Validate::Validate::val_number( 1, 8, $params->{$prefix.'max_length'} );   # check field length
       if ( $error-> { msg } ) { push @error_list, { $prefix."max_length" => $error->{ msg } }; }
 
    for my $key ( keys %sql ) { 
@@ -426,9 +426,9 @@ sub validate_datepicker {
    my (%sql, $error, @error_list);
 	my $prefix = 'dp_';
 	
-   ($sql{'form_name'}, $error) = Validate::val_text( 1, 64, $params->{$prefix.'label_name'} );  # check field label
+   ($sql{'form_name'}, $error) = Validate::Validate::val_text( 1, 64, $params->{$prefix.'label_name'} );  # check field label
       if ( $error-> { msg } ) { push @error_list, { $prefix."label_name" => $error->{ msg } }; }
-   ($sql{'form_name'}, $error) = Validate::val_selected( $params->{$prefix.'max_length'} );   # check field length
+   ($sql{'form_name'}, $error) = Validate::Validate::val_selected( $params->{$prefix.'max_length'} );   # check field length
       if ( $error-> { msg } ) { push @error_list, { $prefix."max_length" => $error->{ msg } }; }
 
    for my $key ( keys %sql ) { 
@@ -446,7 +446,7 @@ sub validate_line_of_text {
    my (%sql, $error, @error_list);
 	my $prefix = 'lt_';
 	
-   ($sql{'form_name'}, $error) = Validate::val_text( 1, 64, $params->{$prefix.'label_name'} );  # check field label
+   ($sql{'form_name'}, $error) = Validate::Validate::val_text( 1, 64, $params->{$prefix.'label_name'} );  # check field label
       if ( $error-> { msg } ) { push @error_list, { $prefix."label_name" => $error->{ msg } }; }
 
    for my $key ( keys %sql ) { 
@@ -464,7 +464,7 @@ sub validate_session_variable {
    my (%sql, $error, @error_list);
 	my $prefix = 'sv_';
 	
-   ($sql{'form_name'}, $error) = Validate::val_text( 1, 64, $params->{$prefix.'label_name'} );  # check field label
+   ($sql{'form_name'}, $error) = Validate::Validate::val_text( 1, 64, $params->{$prefix.'label_name'} );  # check field label
       if ( $error-> { msg } ) { push @error_list, { $prefix."label_name" => $error->{ msg } }; }
 
    for my $key ( keys %sql ) { 

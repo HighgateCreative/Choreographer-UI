@@ -199,22 +199,22 @@ prefix '/models' => sub {
 #--- Validate Models -------------------------------------------------------------  
 sub validate_model {
    my $params = shift;
-	my (%sql, $error, @error_list, $stmt);
+   my (%sql, $error, @error_list, $stmt);
 
-	($sql{'app_folder'}, $error) = Validate::Validate::val_text( 0, 64, $params->{'app_folder'} );
-		if ( $error-> { msg } ) { push @error_list, { "app_folder" => $error->{ msg } }; }	
+   ($sql{'app_folder'}, $error) = Validate::Validate::val_text( 0, 64, $params->{'app_folder'} );
+      if ( $error-> { msg } ) { push @error_list, { "app_folder" => $error->{ msg } }; }   
    my $app_name_mand = 0;
    if ($sql{'app_folder'}) {
       $app_name_mand = 1;
    }
-	($sql{'app_name'}, $error) = Validate::Validate::val_text( $app_name_mand, 64, $params->{'app_name'} );
-		if ( $error-> { msg } ) { push @error_list, { "app_name" => $error->{ msg } }; }	
-	($sql{'readable_name'}, $error) = Validate::Validate::val_text( 1, 64, $params->{'readable_name'} );
-		if ( $error-> { msg } ) { push @error_list, { "readable_name" => $error->{ msg } }; }	
-	($sql{'table_name'}, $error) = Validate::Validate::val_text( 1, 64, $params->{'table_name'} );
-		if ( $error-> { msg } ) { push @error_list, { "table_name" => $error->{ msg } }; }	
-	$sql{'write_file'} = ($params->{'write_file'}) ? 1 : 0;
-	$sql{'overlay'} = ($params->{'overlay'}) ? 1 : 0;
+   ($sql{'app_name'}, $error) = Validate::Validate::val_text( $app_name_mand, 64, $params->{'app_name'} );
+      if ( $error-> { msg } ) { push @error_list, { "app_name" => $error->{ msg } }; }   
+   ($sql{'readable_name'}, $error) = Validate::Validate::val_text( 1, 64, $params->{'readable_name'} );
+      if ( $error-> { msg } ) { push @error_list, { "readable_name" => $error->{ msg } }; }   
+   ($sql{'table_name'}, $error) = Validate::Validate::val_text( 1, 64, $params->{'table_name'} );
+      if ( $error-> { msg } ) { push @error_list, { "table_name" => $error->{ msg } }; }   
+   $sql{'write_file'} = ($params->{'write_file'}) ? 1 : 0;
+   $sql{'overlay'} = ($params->{'overlay'}) ? 1 : 0;
 
    my $labels = (ref $params->{'label_name[]'} eq 'ARRAY') ? $params->{'label_name[]'} : [$params->{'label_name[]'}];
    my $max_lengths = (ref $params->{'max_length[]'} eq 'ARRAY') ? $params->{'max_length[]'} : [$params->{'max_length[]'}];
@@ -229,9 +229,9 @@ sub validate_model {
       for my $i ( 0 .. $#$labels ) {
          my %element;
          ($sql{'attributes'}->[$i]{'label'}, $error) = Validate::Validate::val_text( 1, 64, $labels->[$i] );
-            if ( $error-> { msg } ) { push @error_list, { "generic" => "Label Name: ".$error->{ msg } }; }	
+            if ( $error-> { msg } ) { push @error_list, { "generic" => "Label Name: ".$error->{ msg } }; }   
          ($sql{'attributes'}->[$i]{'max_length'}, $error) = Validate::Validate::val_int( 1, $max_lengths->[$i] );
-            if ( $error-> { msg } ) { push @error_list, { "generic" => "Max length: ".$error->{ msg } }; }	
+            if ( $error-> { msg } ) { push @error_list, { "generic" => "Max length: ".$error->{ msg } }; }   
          $sql{'attributes'}->[$i]{'mandatory'} = ($mandatory->[$i]) ? 1 : 0;
          $sql{'attributes'}->[$i]{'static_label'} = ($static_label->[$i]) ? 1 : 0;
          $sql{'attributes'}->[$i]{'inline'} = ($inline->[$i]) ? 1 : 0;
@@ -240,14 +240,14 @@ sub validate_model {
             @{ $sql{'attributes'}->[$i]{'options'} } = ($options->[$i] eq 'undefined') ? () : split(',', $options->[$i]);
             for my $j ( 0 .. $#{ $sql{'attributes'}->[$i]{'options'} }) {
                ($sql{'attributes'}->[$i]{'options'}->[$j], $error) = Validate::Validate::val_text( 1, 64, $sql{'attributes'}->[$i]{'options'}->[$j] );
-                  if ( $error-> { msg } ) { push @error_list, { "generic" => "Option: ".$error->{ msg } }; }	
+                  if ( $error-> { msg } ) { push @error_list, { "generic" => "Option: ".$error->{ msg } }; }   
             }
          }
 
          ($sql{'attributes'}->[$i]{'order'}, $error) = Validate::Validate::val_number( 1, 16, $orders->[$i] );
-            if ( $error-> { msg } ) { push @error_list, { "generic" => "Order: ".$error->{ msg } }; }	
+            if ( $error-> { msg } ) { push @error_list, { "generic" => "Order: ".$error->{ msg } }; }   
          ($sql{'attributes'}->[$i]{'type'}, $error) = Validate::Validate::val_text( 1, 64, $types->[$i] );
-            if ( $error-> { msg } ) { push @error_list, { "generic" => "Type: ".$error->{ msg } }; }	
+            if ( $error-> { msg } ) { push @error_list, { "generic" => "Type: ".$error->{ msg } }; }   
       }
    }
 
@@ -257,15 +257,15 @@ sub validate_model {
    if (@error_list) {
       return { 'errors' => \@error_list };
    }
-	return \%sql;
+   return \%sql;
 }
 
 #--- Validate -------------------------------------------------------------  
 sub validate_textfield {
    my $params = shift;
    my (%sql, $error, @error_list);
-	my $prefix = 'tx_';
-	
+   my $prefix = 'tx_';
+   
    ($sql{'form_name'}, $error) = Validate::Validate::val_text( 1, 64, $params->{$prefix.'label_name'} );  # check field label
       if ( $error-> { msg } ) { push @error_list, { $prefix."label_name" => $error->{ msg } }; }
    ($sql{'form_name'}, $error) = Validate::Validate::val_selected( $params->{$prefix.'max_length'} );   # check field length
@@ -284,8 +284,8 @@ sub validate_textfield {
 sub validate_emailfield {
    my $params = shift;
    my (%sql, $error, @error_list);
-	my $prefix = 'em_';
-	
+   my $prefix = 'em_';
+   
    ($sql{'form_name'}, $error) = Validate::Validate::val_text( 1, 64, $params->{$prefix.'label_name'} );  # check field label
       if ( $error-> { msg } ) { push @error_list, { $prefix."label_name" => $error->{ msg } }; }
    ($sql{'form_name'}, $error) = Validate::Validate::val_selected( $params->{$prefix.'max_length'} );   # check field length
@@ -304,8 +304,8 @@ sub validate_emailfield {
 sub validate_textareafield {
    my $params = shift;
    my (%sql, $error, @error_list);
-	my $prefix = 'ta_';
-	
+   my $prefix = 'ta_';
+   
    ($sql{'form_name'}, $error) = Validate::Validate::val_text( 1, 64, $params->{$prefix.'label_name'} );  # check field label
       if ( $error-> { msg } ) { push @error_list, { $prefix."label_name" => $error->{ msg } }; }
    ($sql{'form_name'}, $error) = Validate::Validate::val_number( 1, 8, $params->{$prefix.'max_length'} );   # check field length
@@ -324,8 +324,8 @@ sub validate_textareafield {
 sub validate_checkboxfield {
    my $params = shift;
    my (%sql, $error, @error_list);
-	my $prefix = 'cb_';
-	
+   my $prefix = 'cb_';
+   
    ($sql{'form_name'}, $error) = Validate::Validate::val_text( 1, 64, $params->{$prefix.'label_name'} );  # check field label
       if ( $error-> { msg } ) { push @error_list, { $prefix."label_name" => $error->{ msg } }; }
    ($sql{'form_name'}, $error) = Validate::Validate::val_selected( $params->{$prefix.'max_length'} );   # check field length
@@ -344,8 +344,8 @@ sub validate_checkboxfield {
 sub validate_radiofield {
    my $params = shift;
    my (%sql, $error, @error_list);
-	my $prefix = 'ra_';
-	
+   my $prefix = 'ra_';
+   
    ($sql{'form_name'}, $error) = Validate::Validate::val_text( 1, 64, $params->{$prefix.'label_name'} );  # check field label
       if ( $error-> { msg } ) { push @error_list, { $prefix."label_name" => $error->{ msg } }; }
    ($sql{'form_name'}, $error) = Validate::Validate::val_selected( $params->{$prefix.'max_length'} );   # check field length
@@ -364,8 +364,8 @@ sub validate_radiofield {
 sub validate_selectfield {
    my $params = shift;
    my (%sql, $error, @error_list);
-	my $prefix = 'sl_';
-	
+   my $prefix = 'sl_';
+   
    ($sql{'form_name'}, $error) = Validate::Validate::val_text( 1, 64, $params->{$prefix.'label_name'} );  # check field label
       if ( $error-> { msg } ) { push @error_list, { $prefix."label_name" => $error->{ msg } }; }
    ($sql{'form_name'}, $error) = Validate::Validate::val_selected( $params->{$prefix.'max_length'} );   # check field length
@@ -384,8 +384,8 @@ sub validate_selectfield {
 sub validate_filefield {
    my $params = shift;
    my (%sql, $error, @error_list);
-	my $prefix = 'fl_';
-	
+   my $prefix = 'fl_';
+   
    ($sql{'form_name'}, $error) = Validate::Validate::val_text( 1, 64, $params->{$prefix.'label_name'} );  # check field label
       if ( $error-> { msg } ) { push @error_list, { $prefix."label_name" => $error->{ msg } }; }
    ($sql{'form_name'}, $error) = Validate::Validate::val_text( 1, 16, $params->{$prefix.'max_length'} );   # check field length
@@ -404,8 +404,8 @@ sub validate_filefield {
 sub validate_tinymce {
    my $params = shift;
    my (%sql, $error, @error_list);
-	my $prefix = 'tm_';
-	
+   my $prefix = 'tm_';
+   
    ($sql{'form_name'}, $error) = Validate::Validate::val_text( 1, 64, $params->{$prefix.'label_name'} );  # check field label
       if ( $error-> { msg } ) { push @error_list, { $prefix."label_name" => $error->{ msg } }; }
    ($sql{'form_name'}, $error) = Validate::Validate::val_number( 1, 8, $params->{$prefix.'max_length'} );   # check field length
@@ -424,8 +424,8 @@ sub validate_tinymce {
 sub validate_datepicker {
    my $params = shift;
    my (%sql, $error, @error_list);
-	my $prefix = 'dp_';
-	
+   my $prefix = 'dp_';
+   
    ($sql{'form_name'}, $error) = Validate::Validate::val_text( 1, 64, $params->{$prefix.'label_name'} );  # check field label
       if ( $error-> { msg } ) { push @error_list, { $prefix."label_name" => $error->{ msg } }; }
    ($sql{'form_name'}, $error) = Validate::Validate::val_selected( $params->{$prefix.'max_length'} );   # check field length
@@ -444,8 +444,8 @@ sub validate_datepicker {
 sub validate_line_of_text {
    my $params = shift;
    my (%sql, $error, @error_list);
-	my $prefix = 'lt_';
-	
+   my $prefix = 'lt_';
+   
    ($sql{'form_name'}, $error) = Validate::Validate::val_text( 1, 64, $params->{$prefix.'label_name'} );  # check field label
       if ( $error-> { msg } ) { push @error_list, { $prefix."label_name" => $error->{ msg } }; }
 
@@ -462,8 +462,8 @@ sub validate_line_of_text {
 sub validate_session_variable {
    my $params = shift;
    my (%sql, $error, @error_list);
-	my $prefix = 'sv_';
-	
+   my $prefix = 'sv_';
+   
    ($sql{'form_name'}, $error) = Validate::Validate::val_text( 1, 64, $params->{$prefix.'label_name'} );  # check field label
       if ( $error-> { msg } ) { push @error_list, { $prefix."label_name" => $error->{ msg } }; }
 

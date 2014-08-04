@@ -1,65 +1,65 @@
 //--------- Listable item config ----------
 textfield = {
-	formid: 'textfield_form',
-	prefix: 'tx',
-	type: 'text',
-	variables: ['label_name','max_length','mandatory','static_label','inline','options'],
-	display: function(vars) {
-		return '<label>' + vars.label_name + '</label>\
-		<input type="text" />';
-	},
+   formid: 'textfield_form',
+   prefix: 'tx',
+   type: 'text',
+   variables: ['label_name','max_length','mandatory','static_label','inline','options'],
+   display: function(vars) {
+      return '<label>' + vars.label_name + '</label>\
+      <input type="text" />';
+   },
    url: '/models/textfield'
 };
 emailfield = {
-	formid: 'email_form',
-	prefix: 'em',
-	type: 'email',
-	variables: ['label_name','max_length','mandatory','static_label','inline','options'],
-	display: function(vars) {
-		return '<label>' + vars.label_name + '</label>\
-		<input type="text" />';
-	},
+   formid: 'email_form',
+   prefix: 'em',
+   type: 'email',
+   variables: ['label_name','max_length','mandatory','static_label','inline','options'],
+   display: function(vars) {
+      return '<label>' + vars.label_name + '</label>\
+      <input type="text" />';
+   },
    url: '/models/emailfield'
 };
 textareafield = {
-	formid: 'textarea_form',
-	prefix: 'ta',
-	type: 'textarea',
-	variables: ['label_name','max_length','mandatory','static_label','inline','options'],
-	display: function(vars) {
-		return '<label>'+ vars.label_name +'</label>\
+   formid: 'textarea_form',
+   prefix: 'ta',
+   type: 'textarea',
+   variables: ['label_name','max_length','mandatory','static_label','inline','options'],
+   display: function(vars) {
+      return '<label>'+ vars.label_name +'</label>\
                <textarea></textarea>';
-	},
+   },
    url: '/models/textareafield'
 };
 tinymcefield = {
-	formid: 'tinymce_form',
-	prefix: 'tm',
-	type: 'tinymce',
-	variables: ['label_name','max_length','mandatory','static_label','inline','options'],
-	display: function(vars) {
-		return '<label>'+ vars.label_name +' (Tiny MCE)</label>\
+   formid: 'tinymce_form',
+   prefix: 'tm',
+   type: 'tinymce',
+   variables: ['label_name','max_length','mandatory','static_label','inline','options'],
+   display: function(vars) {
+      return '<label>'+ vars.label_name +' (Tiny MCE)</label>\
                <textarea></textarea>';
-	},
+   },
    url: '/models/tinymce'
 };
 checkboxfield = {
-	formid: 'checkbox_form',
-	prefix: 'cb',
-	type: 'checkbox',
-	variables: ['label_name','max_length','mandatory','static_label','inline','options'],
-	display: function(vars) {
-		return '<input type="checkbox" />\
+   formid: 'checkbox_form',
+   prefix: 'cb',
+   type: 'checkbox',
+   variables: ['label_name','max_length','mandatory','static_label','inline','options'],
+   display: function(vars) {
+      return '<input type="checkbox" />\
                <label class="checkbox_label">'+vars.label_name+'</label>';
-	},
+   },
    url: '/models/checkboxfield'
 };
 radiofield = {
-	formid: 'radio_form',
-	prefix: 'ra',
-	type: 'radio',
-	variables: ['label_name','max_length','mandatory','static_label','inline','options'],
-	display: function(vars) {
+   formid: 'radio_form',
+   prefix: 'ra',
+   type: 'radio',
+   variables: ['label_name','max_length','mandatory','static_label','inline','options'],
+   display: function(vars) {
                var options = "option1\noption2\noption3".split("\n");
                var options_html = '';
                for ( i in options ) {
@@ -68,17 +68,17 @@ radiofield = {
                      <span>'+options[i]+'</span>\
                   ';
                }
-		return '<label>'+vars.label_name+'</label>\
+      return '<label>'+vars.label_name+'</label>\
                '+options_html;
-	},
+   },
    url: '/models/radiofield'
 };
 selectfield = {
-	formid: 'select_form',
-	prefix: 'sl',
-	type: 'select',
-	variables: ['label_name','max_length','mandatory','static_label','inline','options'],
-	display: function(vars) {
+   formid: 'select_form',
+   prefix: 'sl',
+   type: 'select',
+   variables: ['label_name','max_length','mandatory','static_label','inline','options'],
+   display: function(vars) {
                var options = "option1\noption2\noption3".split("\n");
                var options_html = '';
                for ( i in options ) {
@@ -86,56 +86,56 @@ selectfield = {
                      <option value="'+options[i]+'">'+options[i]+'</option>\
                   ';
                }
-		return '<label>'+vars.label_name+'</label>\
-		<select>\
+      return '<label>'+vars.label_name+'</label>\
+      <select>\
                '+options_html+'\
                </select>';
-	},
+   },
    url: '/models/selectfield'
 };
 filefield = {
-	formid: 'file_form',
-	prefix: 'fl',
-	type: 'file',
-	variables: ['label_name','max_length','mandatory','static_label','inline','options'],
-	display: function(vars) {
-		return '<label>'+vars.label_name+'</label>\
+   formid: 'file_form',
+   prefix: 'fl',
+   type: 'file',
+   variables: ['label_name','max_length','mandatory','static_label','inline','options'],
+   display: function(vars) {
+      return '<label>'+vars.label_name+'</label>\
                <input type="file" />';
-	},
+   },
    url: '/models/filefield'
 };
 datepicker = {
-	formid: 'datepicker_form',
-	prefix: 'dp',
-	type: 'datepicker',
-	variables: ['label_name','max_length','mandatory','static_label','inline','options'],
-	display: function(vars) {
-		return '<label>' + vars.label_name + '</label>\
-		<input type="text" class="date_picker" />';
-	},
+   formid: 'datepicker_form',
+   prefix: 'dp',
+   type: 'datepicker',
+   variables: ['label_name','max_length','mandatory','static_label','inline','options'],
+   display: function(vars) {
+      return '<label>' + vars.label_name + '</label>\
+      <input type="text" class="date_picker" />';
+   },
    afterSave: function(itemType) {
-		$('.date_picker').datepicker( { dateFormat: "dd-mm-yy" } );
-	},
+      $('.date_picker').datepicker( { dateFormat: "dd-mm-yy" } );
+   },
    url: '/models/datepicker'
 };
 sessionvariable = {
-	formid: 'session_variable_form',
-	prefix: 'sv',
-	type: 'session_variable',
-	variables: ['label_name','max_length','mandatory','static_label','inline','options'],
-	display: function(vars) {
-		return '<label>' + vars.label_name + ' (Session variable)</label>';
-	},
+   formid: 'session_variable_form',
+   prefix: 'sv',
+   type: 'session_variable',
+   variables: ['label_name','max_length','mandatory','static_label','inline','options'],
+   display: function(vars) {
+      return '<label>' + vars.label_name + ' (Session variable)</label>';
+   },
    url: '/models/session_variable'
 };
 lineoftext = {
-	formid: 'lineoftext_form',
-	prefix: 'lt',
-	type: 'line_of_text',
-	variables: ['label_name','max_length','mandatory','static_label','inline','options'],
-	display: function(vars) {
-		return '<label>' + vars.label_name + '</label>';
-	},
+   formid: 'lineoftext_form',
+   prefix: 'lt',
+   type: 'line_of_text',
+   variables: ['label_name','max_length','mandatory','static_label','inline','options'],
+   display: function(vars) {
+      return '<label>' + vars.label_name + '</label>';
+   },
    url: '/models/line_of_text'
 };
 var element_types = [textfield,emailfield,textareafield,tinymcefield,checkboxfield,radiofield,selectfield,filefield,datepicker,lineoftext,sessionvariable];
@@ -148,11 +148,11 @@ function normalize_field_labels(element) {
          var prefix = '';
       }
       $('#'+$(element).attr('id')+' label').each(function(){   
-			if ($(this).attr('lab')) {
-				var lab = $(this).attr('lab').replace(prefix, '');
-			} else {
-				var lab = $(this).attr('for').replace(prefix, '');
-			}
+         if ($(this).attr('lab')) {
+            var lab = $(this).attr('lab').replace(prefix, '');
+         } else {
+            var lab = $(this).attr('for').replace(prefix, '');
+         }
          //$($("input[id='"+lab+"']")).css('background-color','#fff');
          lab = lab.slice(0,1).toUpperCase() + lab.slice(1);
          lab = lab.replace(/_/g, " ");
@@ -161,11 +161,11 @@ function normalize_field_labels(element) {
       });
    } else {
       $('label').each(function(){   
-			if ($(this).attr('lab')) {
-				var lab = $(this).attr('lab');
-			} else {
-				var lab = $(this).attr('for');
-			}
+         if ($(this).attr('lab')) {
+            var lab = $(this).attr('lab');
+         } else {
+            var lab = $(this).attr('for');
+         }
          //$($("input[id='"+lab+"']")).css('background-color','#fff');
          lab = lab.slice(0,1).toUpperCase() + lab.slice(1);
          lab = lab.replace(/_/g, " ");
@@ -194,7 +194,7 @@ $(function() {
          afterSave: null
       };
       // Extend default optiosn with options passed as arguements
-		options = $.extend({},options,options_arg);
+      options = $.extend({},options,options_arg);
 
       $('#'+options.form_id).ajaxForm({
          url: options.url,
@@ -257,7 +257,7 @@ $(function() {
       $('#table_name').val(name.toLowerCase());
    });
 
-	// Invoking as listable
+   // Invoking as listable
    listable_element.listable({
       variable_vault: $('#variable_vault'),
       delete_confirmation: true,

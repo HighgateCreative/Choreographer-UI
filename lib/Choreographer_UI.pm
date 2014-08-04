@@ -230,8 +230,10 @@ sub validate_model {
          my %element;
          ($sql{'attributes'}->[$i]{'label'}, $error) = Validate::Validate::val_text( 1, 64, $labels->[$i] );
             if ( $error-> { msg } ) { push @error_list, { "generic" => "Label Name: ".$error->{ msg } }; }   
-         ($sql{'attributes'}->[$i]{'max_length'}, $error) = Validate::Validate::val_int( 1, $max_lengths->[$i] );
-            if ( $error-> { msg } ) { push @error_list, { "generic" => "Max length: ".$error->{ msg } }; }   
+         if ($types->[$i] ne 'session_variable') {
+            ($sql{'attributes'}->[$i]{'max_length'}, $error) = Validate::Validate::val_int( 1, $max_lengths->[$i] );
+               if ( $error-> { msg } ) { push @error_list, { "generic" => "Max length: ".$error->{ msg } }; }   
+         }
          $sql{'attributes'}->[$i]{'mandatory'} = ($mandatory->[$i]) ? 1 : 0;
          $sql{'attributes'}->[$i]{'static_label'} = ($static_label->[$i]) ? 1 : 0;
          $sql{'attributes'}->[$i]{'inline'} = ($inline->[$i]) ? 1 : 0;
